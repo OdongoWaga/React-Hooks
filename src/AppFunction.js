@@ -1,16 +1,29 @@
 import React, { useState, useEffect } from "react";
 
+const initialLocationState = {
+	latitude: null,
+	longitude: null,
+	speed: null
+};
+
 const AppFunction = () => {
 	const [count, setCount] = useState(0);
 	const [isOn, setIsOn] = useState(false);
 	const [mousePosition, setMousePosition] = useState({ x: null, y: null });
+	const [status, setStatus] = useState(navigator.online);
+	const [location, setLocation] = useState(initialLocationState);
 
 	useEffect(() => {
 		document.title = `You have clicked ${count} times`;
 		window.addEventListener("mousemove", handleMouseMove);
+		window.addEventListener("online", handleOnline);
+		window.addEventListener("offline", handleOffline);
 
+		//Clean Up function
 		return () => {
 			window.removeEventListener("mousemove", handleMouseMove);
+			window.removeEventListener("online", handleOnline);
+			window.removeEventListener("offline", handleOffline);
 		};
 	}, [count]);
 
@@ -19,6 +32,14 @@ const AppFunction = () => {
 			x: e.pageX,
 			y: e.pageY
 		});
+	};
+
+	const handleOffline = () => {
+		setStatus(false);
+	};
+
+	const handleOnline = () => {
+		setStatus(true);
 	};
 
 	const incrementCount = () => {
@@ -48,6 +69,12 @@ const AppFunction = () => {
 			{JSON.stringify(mousePosition, null, 2)}
 
 			<br />
+
+			<h2> Network Status </h2>
+			<p>
+				{" "}
+				You Are <strong>{status ? "online" : "offline"} </strong>{" "}
+			</p>
 		</>
 	);
 };
