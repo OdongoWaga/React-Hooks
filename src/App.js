@@ -1,24 +1,21 @@
 import React, { Component } from "react";
 
 class App extends Component {
+	state = {
+		count: 0
+	};
+
+	incrementCount = () => {
+		this.setState((prevState) => ({
+			count: prevState.count + 1
+		}));
+	};
+
 	render() {
 		return (
-			<div className="App">
-				<header className="App-header">
-					<img src={logo} className="App-logo" alt="logo" />
-					<p>
-						Edit <code>src/App.js</code> and save to reload.
-					</p>
-					<a
-						className="App-link"
-						href="https://reactjs.org"
-						target="_blank"
-						rel="noopener noreferrer"
-					>
-						Learn React
-					</a>
-				</header>
-			</div>
+			<button onClick={this.incrementCount}>
+				<p>I was clicked {this.state.count} times</p>
+			</button>
 		);
 	}
 }
