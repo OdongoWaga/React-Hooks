@@ -3,10 +3,23 @@ import React, { useState, useEffect } from "react";
 const AppFunction = () => {
 	const [count, setCount] = useState(0);
 	const [isOn, setIsOn] = useState(false);
+	const [mousePosition, setMousePosition] = useState({ x: null, y: null });
 
 	useEffect(() => {
 		document.title = `You have clicked ${count} times`;
-	});
+		window.addEventListener("mousemove", handleMouseMove);
+
+		return () => {
+			window.removeEventListener("mousemove", handleMouseMove);
+		};
+	}, [count]);
+
+	const handleMouseMove = (e) => {
+		setMousePosition({
+			x: e.pageX,
+			y: e.pageY
+		});
+	};
 
 	const incrementCount = () => {
 		setCount((prevCount) => prevCount + 1);
@@ -30,6 +43,11 @@ const AppFunction = () => {
 				}}
 				onClick={toggleLight}
 			/>
+
+			<h2> Mouse Position </h2>
+			{JSON.stringify(mousePosition, null, 2)}
+
+			<br />
 		</>
 	);
 };
