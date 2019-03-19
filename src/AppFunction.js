@@ -25,6 +25,7 @@ const AppFunction = () => {
 		const watchId = navigator.geolocation.watchPosition(handleGeolocation);
 
 		//Clean Up function
+		// array tells Use Effect what our array function only runs on component did mount and unmount it acts like component did update
 		return () => {
 			window.removeEventListener("mousemove", handleMouseMove);
 			window.removeEventListener("online", handleOnline);
