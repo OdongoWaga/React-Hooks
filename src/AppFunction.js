@@ -11,21 +11,38 @@ const AppFunction = () => {
 	const [isOn, setIsOn] = useState(false);
 	const [mousePosition, setMousePosition] = useState({ x: null, y: null });
 	const [status, setStatus] = useState(navigator.online);
-	const [location, setLocation] = useState(initialLocationState);
+	const [{ speed, latitude, longitude }, setLocation] = useState(
+		initialLocationState
+	);
+	let mounted = true;
 
 	useEffect(() => {
 		document.title = `You have clicked ${count} times`;
 		window.addEventListener("mousemove", handleMouseMove);
 		window.addEventListener("online", handleOnline);
 		window.addEventListener("offline", handleOffline);
+		navigator.geolocation.getCurrentPosition(handleGeolocation);
+		const watchId = navigator.geolocation.watchPosition(handleGeolocation);
 
 		//Clean Up function
 		return () => {
 			window.removeEventListener("mousemove", handleMouseMove);
 			window.removeEventListener("online", handleOnline);
 			window.removeEventListener("offline", handleOffline);
+			navigator.geolocation.clearWatch(watchId);
+			mounted = false;
 		};
 	}, [count]);
+
+	const handleGeolocation = (e) => {
+		if (mounted) {
+			setLocation({
+				latitude: e.coords.latitude,
+				longitude: e.coords.longitude,
+				speed: e.coords.speed
+			});
+		}
+	};
 
 	const handleMouseMove = (e) => {
 		setMousePosition({
@@ -75,6 +92,10 @@ const AppFunction = () => {
 				{" "}
 				You Are <strong>{status ? "online" : "offline"} </strong>{" "}
 			</p>
+			<h2> Geolocation </h2>
+			<p> Latitude is {latitude} </p>
+			<p> Longitude is{longitude} </p>
+			<p> Your speed is {speed ? speed : "0"} </p>
 		</>
 	);
 };
